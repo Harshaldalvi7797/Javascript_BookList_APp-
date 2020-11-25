@@ -47,6 +47,17 @@ class UI {
       el.parentElement.parentElement.remove();
     }
   }
+  static showAlert(message, className) {
+    const div = document.createElement("div");
+    div.className = `alert alert-${className}`;
+    div.appendChild(document.createTextNode(message));
+    const container = document.querySelector(".container");
+    const form = document.querySelector("#book-form");
+    container.insertBefore(div, form);
+
+    // Vanish in 3 seconds
+    setTimeout(() => document.querySelector(".alert").remove(), 3000);
+  }
 
   static clearFields() {
     const title = (document.querySelector("#title").value = "");
@@ -69,16 +80,23 @@ document.querySelector("#book-form").addEventListener("submit", e => {
   const author = document.querySelector("#author").value;
   const isbn = document.querySelector("#isbn").value;
 
-  const book = new Book(title, author, isbn);
-  console.log(book);
+  //validayion
+  if (title === " " || author === "" || isbn === "") {
+    //alert("plaese fill");
+    UI.showAlert("please add data", "danger");
+  } else {
+    const book = new Book(title, author, isbn);
+    console.log(book);
 
-  //add book to Ui
-  UI.addBookToList(book);
+    //add book to Ui
+    UI.addBookToList(book);
 
-  UI.clearFields();
+    UI.clearFields();
+  }
 
   //remove book
   document.querySelector("#book-list").addEventListener("click", e => {
     UI.deleteBook(e.target);
+    UI.showAlert("remove successfully", "success");
   });
 });
